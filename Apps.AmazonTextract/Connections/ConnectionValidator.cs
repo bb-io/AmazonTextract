@@ -1,4 +1,4 @@
-﻿using Apps.AmazonTextract.Api;
+using Apps.AmazonTextract.Api;
 using Blackbird.Applications.Sdk.Common.Authentication;
 using Blackbird.Applications.Sdk.Common.Connections;
 
@@ -30,6 +30,5 @@ public class ConnectionValidator: IConnectionValidator
                 Message = ex.Message
             };
         }
-
     }
 }
