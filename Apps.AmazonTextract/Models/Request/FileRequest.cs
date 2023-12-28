@@ -1,8 +1,8 @@
-using File = Blackbird.Applications.Sdk.Common.Files.File;
+using Blackbird.Applications.Sdk.Common.Files;
 
 namespace Apps.AmazonTextract.Models.Request;
 
 public class FileRequest
 {
-    public File File { get; set; }
+    public FileReference File { get; set; }
 }
