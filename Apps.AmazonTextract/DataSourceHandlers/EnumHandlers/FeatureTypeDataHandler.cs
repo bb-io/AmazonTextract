@@ -1,14 +1,15 @@
-using Blackbird.Applications.Sdk.Utils.Sdk.DataSourceHandlers;
+using Blackbird.Applications.Sdk.Common.Dictionaries;
 
 namespace Apps.AmazonTextract.DataSourceHandlers.EnumHandlers;
 
-public class FeatureTypeDataHandler : EnumDataHandler
+public class FeatureTypeDataHandler : IStaticDataSourceHandler
 {
-    protected override Dictionary<string, string> EnumValues => new()
-    {
-        { "TABLES", "Tables" },
-        { "FORMS", "Forms" },
-        { "SIGNATURES", "Signatures" },
-        { "LAYOUT", "Layout" },
-    };
+    public Dictionary<string, string> GetData()
+        => new()
+        {
+            { "TABLES", "Tables" },
+            { "FORMS", "Forms" },
+            { "SIGNATURES", "Signatures" },
+            { "LAYOUT", "Layout" },
+        };
 }

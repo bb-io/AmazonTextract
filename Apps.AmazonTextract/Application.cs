@@ -1,9 +1,16 @@
 ﻿using Blackbird.Applications.Sdk.Common;
+using Blackbird.Applications.Sdk.Common.Metadata;
 
 namespace Apps.AmazonTextract;
 
-public class Application : IApplication
+public class Application : IApplication, ICategoryProvider
 {
+    public IEnumerable<ApplicationCategory> Categories
+    {
+        get => [ApplicationCategory.AmazonApps];
+        set { }
+    }
+    
     public string Name
     {
         get => "Amazon Textract";
