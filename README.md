@@ -6,7 +6,15 @@ Blackbird is the new automation backbone for the language technology industry. B
 
 <!-- begin docs -->
 
-Documentation coming soon.
+Amazon Textract is a machine learning service that automatically extracts text, handwriting, and data from scanned documents, including forms and tables. It goes beyond simple optical character recognition (OCR) by identifying the structure of documents, enabling the extraction of complex data fields and their relationships, which is useful for automating document processing and data entry tasks.
+
+## Actions
+
+### Analysis
+- **Analyze document** Analyze an input document for relationships between detected items
+- **Analyze expense** Analyze an input document for financially related relationships between text
+- **Analyze identity document** Analyze identity document for relevant information
+- **Detect document text** Detect text in the input document
 
 ## Feedback
 
