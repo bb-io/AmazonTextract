@@ -20,7 +20,7 @@ public class IdentityDocumentFieldEntity
     public IdentityDocumentFieldEntity(IdentityDocumentField identityDocumentField)
     {
         Type = identityDocumentField.Type?.Text;
-        Confidence = identityDocumentField.ValueDetection.Confidence;
+        Confidence = identityDocumentField.ValueDetection.Confidence ?? 0;
         Text = identityDocumentField.ValueDetection.Text;
         NormalizedValueType = identityDocumentField.ValueDetection.NormalizedValue?.ValueType?.ToString();
         NormalizedValue = identityDocumentField.ValueDetection.NormalizedValue?.Value;
