@@ -11,7 +11,7 @@ public class AppClient : AmazonTextractClient
 {
     public AppClient(AuthenticationCredentialsProvider[] creds) : base(GetAwsCreds(creds), new AmazonTextractConfig()
     {
-        RegionEndpoint = RegionEndpoint.GetBySystemName(creds.Get(CredsNames.AccessSecret).Value),
+        RegionEndpoint = RegionEndpoint.GetBySystemName(creds.Get(CredsNames.Region).Value),
     })
     {
     }
