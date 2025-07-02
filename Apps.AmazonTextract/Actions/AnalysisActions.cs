@@ -20,7 +20,7 @@ public class AnalysisActions : AppInvocable
         _fileManagementClient = fileManagementClient;
     }
 
-    [Action("Analyze document", Description = "Analyze an input document for relationships between detected items")]
+    [Action("Analyze file", Description = "Analyze an input file for relationships between detected items")]
     public async Task<BlocksResponse> AnalyzeDocumet([ActionParameter] AnalyzeDocRequest input)
     {
         var file = await _fileManagementClient.DownloadAsync(input.File);
@@ -41,7 +41,7 @@ public class AnalysisActions : AppInvocable
     }
 
     [Action("Analyze expense",
-        Description = "Analyze an input document for financially related relationships between text")]
+        Description = "Analyze an input file for financially related relationships between text")]
     public async Task<AnalyzeDocumentExpenseResponse> AnalyzeExpense([ActionParameter] FileRequest fileInput)
     {
         var file = await _fileManagementClient.DownloadAsync(fileInput.File);
@@ -60,7 +60,7 @@ public class AnalysisActions : AppInvocable
         return new(response);
     }
 
-    [Action("Analyze identity document", Description = "Analyze identity document for relevant information")]
+    [Action("Analyze identity file", Description = "Analyze identity file for relevant information")]
     public async Task<AnalyzeIdentityDocumentResponse> AnalyzeIdentityDocuments([ActionParameter] FileRequest fileInput)
     {
         var file = await _fileManagementClient.DownloadAsync(fileInput.File);
@@ -82,7 +82,7 @@ public class AnalysisActions : AppInvocable
         return new(response);
     }
 
-    [Action("Detect document text", Description = "Detect text in the input document")]
+    [Action("Detect file text", Description = "Detect text in the input file")]
     public async Task<BlocksResponse> DetectDocumentText([ActionParameter] FileRequest fileInput)
     {
         var file = await _fileManagementClient.DownloadAsync(fileInput.File);
