@@ -11,10 +11,10 @@ Amazon Textract is a machine learning service that automatically extracts text, 
 ## Actions
 
 ### Analysis
-- **Analyze document** Analyze an input document for relationships between detected items
-- **Analyze expense** Analyze an input document for financially related relationships between text
-- **Analyze identity document** Analyze identity document for relevant information
-- **Detect document text** Detect text in the input document
+- **Analyze document** Analyze an input document for relationships between detected items. Supported formats: JPEG, PNG, TIFF, PDF.
+- **Analyze expense** Analyze an input document for financially related relationships between text. Supported formats: JPEG, PNG, TIFF, PDF.
+- **Analyze identity document** Analyze identity document for relevant information. Supported formats: JPEG, PNG, TIFF, PDF.
+- **Detect document text** Detect text in the input document. Supported formats: JPEG, PNG, TIFF, PDF.
 
 ## Feedback
 

@@ -30,6 +30,6 @@ public class BlockEntity
         SelectionStatus = block.SelectionStatus?.ToString();
         Text = block.Text;
         TextType = block.TextType?.ToString();
-        Relationships = block.Relationships.Select(x => new RelationshipEntity(x));
+        Relationships = block.Relationships?.Select(x => new RelationshipEntity(x)) ?? Enumerable.Empty<RelationshipEntity>();
     }
 }
