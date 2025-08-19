@@ -1,3 +1,4 @@
+﻿using Amazon.Textract.Model;
 using Apps.AmazonTextract.Invocables;
 using Apps.AmazonTextract.Models.Request;
 using Apps.AmazonTextract.Models.Response;
@@ -7,6 +8,9 @@ using Blackbird.Applications.Sdk.Common.Actions;
 using Blackbird.Applications.Sdk.Common.Exceptions;
 using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using System.Reflection.PortableExecutable;
 
 namespace Apps.AmazonTextract.Actions;
 
@@ -118,24 +122,62 @@ public class AnalysisActions : AppInvocable
         var ext = Path.GetExtension(fileName)?.ToLowerInvariant();
 
         if (ext == null || !SupportedExtensions.Contains(ext))
+            throw new PluginMisconfigurationException(
+                $"Unsupported file format '{ext}'. Supported formats: JPEG, PNG, TIFF, PDF.");
+
+        await using var file = await _fileManagementClient.DownloadAsync(fileInput.File);
+        await using var ms = new MemoryStream();
+        await file.CopyToAsync(ms);
+        ms.Position = 0;
+
+        if (ext is ".jpg" or ".jpeg" or ".png")
         {
-            throw new PluginMisconfigurationException($"Unsupported file format '{ext}'. Supported formats: JPEG, PNG, TIFF, PDF.");
+            var detect = await AmazonHandler.Execute(() => Client.DetectDocumentTextAsync(new DetectDocumentTextRequest
+            {
+                Document = new Document { Bytes = ms }
+            }));
+            return new BlocksResponse(detect.Blocks);
         }
 
-        var file = await _fileManagementClient.DownloadAsync(fileInput.File);
-
-        var memoryStream = new MemoryStream();
-        await file.CopyToAsync(memoryStream);
-        memoryStream.Position = 0;
-
-        var response = await AmazonHandler.Execute(() => Client.DetectDocumentTextAsync(new()
+        if (ext is ".pdf")
         {
-            Document = new()
-            {
-                Bytes = memoryStream
-            }
-        }));
+            var allBlocks = new List<Block>();
 
-        return new(response.Blocks);
+            ms.Position = 0;
+            using var inputDoc = PdfReader.Open(ms, PdfDocumentOpenMode.Import);
+
+            for (int i = 0; i < inputDoc.PageCount; i++)
+            {
+                using var singlePageDoc = new PdfDocument();
+                singlePageDoc.AddPage(inputDoc.Pages[i]);
+
+                using var pageStream = new MemoryStream();
+                singlePageDoc.Save(pageStream, false);
+                pageStream.Position = 0;
+
+                try
+                {
+                    var detect = await AmazonHandler.Execute(() => Client.DetectDocumentTextAsync(new DetectDocumentTextRequest
+                    {
+                        Document = new Document { Bytes = pageStream }
+                    }));
+
+                    foreach (var b in detect.Blocks ?? Enumerable.Empty<Block>())
+                    {
+                        if (b.Page.HasValue) b.Page = i + 1;
+                    }
+
+                    if (detect.Blocks != null) allBlocks.AddRange(detect.Blocks);
+                }
+                catch (Amazon.Textract.Model.UnsupportedDocumentException ex)
+                {
+                    throw new PluginApplicationException(ex.Message);
+                }
+            }
+
+            return new BlocksResponse(allBlocks);
+        }
+
+        throw new PluginMisconfigurationException("Unsupported file format.");
     }
 }

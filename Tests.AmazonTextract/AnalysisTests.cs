@@ -16,7 +16,7 @@ namespace Tests.AmazonTextract
             {
                 File = new FileReference
                 {
-                    Name = "Test3.png",
+                    Name = "test.pdf",
                 }
             });
 
