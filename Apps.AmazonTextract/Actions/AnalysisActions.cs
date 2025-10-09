@@ -10,24 +10,16 @@ using Blackbird.Applications.Sdk.Common.Invocation;
 using Blackbird.Applications.SDK.Extensions.FileManagement.Interfaces;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-using System.Reflection.PortableExecutable;
 
 namespace Apps.AmazonTextract.Actions;
 
-[ActionList]
-public class AnalysisActions : AppInvocable
+[ActionList("Analysis")]
+public class AnalysisActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : AppInvocable(invocationContext)
 {
-    private readonly IFileManagementClient _fileManagementClient;
     public static readonly string[] SupportedExtensions = new[]
     {
         ".jpg", ".jpeg", ".png", ".tiff", ".tif", ".pdf"
     };
-
-    public AnalysisActions(InvocationContext invocationContext, IFileManagementClient fileManagementClient) : base(
-        invocationContext)
-    {
-        _fileManagementClient = fileManagementClient;
-    }
 
     [Action("Analyze file", Description = "Analyze an input file for relationships between detected items")]
     public async Task<BlocksResponse> AnalyzeDocumet([ActionParameter] AnalyzeDocRequest input)
@@ -40,7 +32,7 @@ public class AnalysisActions : AppInvocable
             throw new PluginMisconfigurationException($"Unsupported file format '{ext}'. Supported formats: JPEG, PNG, TIFF, PDF.");
         }
 
-        var file = await _fileManagementClient.DownloadAsync(input.File);
+        var file = await fileManagementClient.DownloadAsync(input.File);
 
         var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream);
@@ -69,7 +61,7 @@ public class AnalysisActions : AppInvocable
             throw new PluginMisconfigurationException($"Unsupported file format '{ext}'. Supported formats: JPEG, PNG, TIFF, PDF.");
         }
 
-        var file = await _fileManagementClient.DownloadAsync(fileInput.File);
+        var file = await fileManagementClient.DownloadAsync(fileInput.File);
 
         var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream);
@@ -96,7 +88,7 @@ public class AnalysisActions : AppInvocable
             throw new PluginMisconfigurationException($"Unsupported file format '{ext}'. Supported formats: JPEG, PNG, TIFF, PDF.");
         }
 
-        var file = await _fileManagementClient.DownloadAsync(fileInput.File);
+        var file = await fileManagementClient.DownloadAsync(fileInput.File);
 
         var memoryStream = new MemoryStream();
         await file.CopyToAsync(memoryStream);
@@ -125,7 +117,7 @@ public class AnalysisActions : AppInvocable
             throw new PluginMisconfigurationException(
                 $"Unsupported file format '{ext}'. Supported formats: JPEG, PNG, TIFF, PDF.");
 
-        await using var file = await _fileManagementClient.DownloadAsync(fileInput.File);
+        await using var file = await fileManagementClient.DownloadAsync(fileInput.File);
         await using var ms = new MemoryStream();
         await file.CopyToAsync(ms);
         ms.Position = 0;
